@@ -1,5 +1,7 @@
 import { validateResult } from './validateResult';
 
+const API_URL = import.meta.env.VITE_API_URL || '';
+
 class ApiError extends Error {
   constructor(message, statusCode) {
     super(message);
@@ -19,7 +21,7 @@ export async function generateStudySet(input) {
   activeAbortController = abortController;
 
   try {
-    const response = await fetch('/api/generate', {
+    const response = await fetch(`${API_URL}/api/generate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -45,8 +47,12 @@ export async function generateStudySet(input) {
     }
 
     const validation = validateResult(data);
+
     if (!validation.valid) {
-      throw new ApiError(validation.error || 'Invalid response from server.', 502);
+      throw new ApiError(
+        validation.error || 'Invalid response from server.',
+        502
+      );
     }
 
     return data;
@@ -54,13 +60,26 @@ export async function generateStudySet(input) {
     if (err.name === 'AbortError') {
       throw err;
     }
+
     if (err instanceof ApiError) {
       throw err;
     }
-    if (typeof err === 'object' && err !== null && err.message === 'Failed to fetch') {
-      throw new ApiError('Cannot connect to server. Please check your connection.', 0);
+
+    if (
+      typeof err === 'object' &&
+      err !== null &&
+      err.message === 'Failed to fetch'
+    ) {
+      throw new ApiError(
+        'Cannot connect to server. Please check your connection.',
+        0
+      );
     }
-    throw new ApiError(err?.message || 'An unexpected error occurred.', 0);
+
+    throw new ApiError(
+      err?.message || 'An unexpected error occurred.',
+      0
+    );
   } finally {
     if (activeAbortController === abortController) {
       activeAbortController = null;
