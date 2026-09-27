@@ -1,130 +1,97 @@
 # AI Study Assistant
 
-Turn any topic into an interactive study session.
+**Turn any topic into an interactive study session.**
 
-## Live Demo
+## 🚀 LIVE DEMO
 
-**Frontend:**  
-https://flam-study-assistant-71v5.onrender.com
+**Frontend:** https://flam-study-assistant-71v5.onrender.com
 
-**Backend API:**  
-https://flam-assignment-0h7b.onrender.com
+**Backend API:** https://flam-assignment-0h7b.onrender.com
 
-**Backend Health Check:**  
-https://flam-assignment-0h7b.onrender.com/api/health
+**Backend Health Check:** https://flam-assignment-0h7b.onrender.com/api/health
 
-> **Note:** The backend is an API service. Opening the backend root URL `/` directly may display `Cannot GET /`. The `/api/health` endpoint is the correct health-check endpoint.
+> The backend is an API service. Use `/api/health` for the health check.
 
----
+## 📌 OVERVIEW
 
-## Overview
-
-AI Study Assistant is a small AI-powered React application that turns any study topic or notes into an interactive study session.
-
-Enter a topic, and the application generates:
-
-- Interactive flashcards
-- Multiple-choice quiz questions
-- Automatic scoring
-- Correct/incorrect breakdown
-- A focused retake mode for incorrect questions
+AI Study Assistant turns any study topic or notes into an interactive study session using Google Gemini. It generates **flashcards**, a **multiple-choice quiz**, **automatic scoring**, and **retake incorrect questions**.
 
 This is **not a chatbot**. The LLM returns structured JSON that is validated before being rendered as interactive React components.
 
----
+## ✨ FEATURES
 
-## Features
+- 📝 **Free-form study topic input**
+- 🤖 **Google Gemini AI integration**
+- 📇 **Interactive flashcards**
+- 🧠 **Multiple-choice quiz**
+- ✅ **Automatic scoring**
+- 🔁 **Retake incorrect questions**
+- ⟳ **Quiz restart**
+- ⏳ **Loading states**
+- ❌ **Error handling**
+- 🛡️ **AI JSON validation**
+- 🚫 **Stale-response protection**
+- 📱 **Responsive design**
+- ♿ **Accessibility support**
+- 🔐 **Backend-only API key**
 
-- 📝 Free-form text input for any study topic or notes
-- 🤖 Generates structured study sets using Google Gemini API
-- 📇 Interactive flashcards with reveal, navigation, and progress
-- 🧠 Multiple-choice quiz with answer feedback
-- ✅ Automatic scoring with correct/incorrect breakdown
-- 🔁 "Retake Incorrect Questions" mode
-- ⟳ Full quiz restart
-- ⏳ Loading state with spinner and skeleton UI
-- ❌ Friendly error states with retry
-- 🛡️ Defensive validation of AI-generated JSON
-- 🚫 Stale-response protection
-- 📱 Fully responsive from mobile to desktop
-- ♿ Semantic HTML, keyboard accessibility, and visible focus states
-- 🔐 API key is stored only on the backend and never exposed to the browser
+## 🛠️ TECH STACK
 
----
-
-## Tech Stack
-
-| Layer | Technology |
+| **Layer** | **Technology** |
 |---|---|
-| Frontend | React 18, Vite, JSX, React Hooks, Functional Components, CSS |
-| Backend | Node.js, Express.js |
-| AI | Google Gemini API (`@google/genai`) |
-| Other | dotenv, cors, concurrently |
+| **Frontend** | React 18, Vite, JSX, React Hooks, Functional Components, CSS |
+| **Backend** | Node.js, Express.js |
+| **AI** | Google Gemini API (`@google/genai`) |
+| **Other** | dotenv, cors, concurrently |
 
----
+## 🏗️ ARCHITECTURE
 
-## Architecture
-
-### Local Development
+### **LOCAL DEVELOPMENT**
 
 ```text
-┌──────────────┐     HTTP POST      ┌──────────────────┐
-│  React App   │ ─────────────────▶ │  Express Server  │
-│   (Vite)     │                    │     :3001        │
-│    :5173     │ ◀───────────────── │                  │
-└──────────────┘                    └────────┬─────────┘
-                                             │
-                                             │ Gemini API
-                                             ▼
-                                      ┌──────────────┐
-                                      │    Gemini    │
-                                      │     API      │
-                                      └──────────────┘
+React / Vite :5173
+      │
+      │ HTTP POST /api/generate
+      ▼
+Express Backend :3001
+      │
+      │ Gemini API
+      ▼
+Google Gemini
+```
 
-Production Deployment
-┌──────────────────────────┐
-│   React / Vite Frontend  │
-│      Render Static Site  │
-└────────────┬─────────────┘
-             │
-             │ HTTPS /api/generate
-             ▼
-┌──────────────────────────┐
-│    Express Backend       │
-│     Render Web Service   │
-└────────────┬─────────────┘
-             │
-             │ Gemini API
-             ▼
-┌──────────────────────────┐
-│      Google Gemini       │
-└──────────────────────────┘
+### **PRODUCTION DEPLOYMENT**
 
-The frontend communicates with the deployed Express backend, while the Gemini API key remains securely configured on the backend.
-How It Works
-1. User input
-   The user types a topic or pastes notes into the textarea.
-2. React → Backend
-   The React application sends a POST /api/generate request containing the study topic.
-3. Backend → Gemini
-   The Express server builds a structured prompt and calls the Gemini API using the backend environment variable GEMINI_API_KEY.
-4. JSON parsing
-   The backend extracts and parses the JSON returned by Gemini.
-5. Backend validation
-   The generated study set is validated against the expected schema.
-6. Validated response → React
-   Valid structured JSON is returned to the frontend. Invalid or malformed responses are rejected with a user-friendly error.
-7. Frontend validation
-   The frontend validates the response again for defense in depth.
-8. Interactive UI
-   React renders the flashcards and quiz.
-9. Quiz results
-   The application calculates the score and identifies incorrect questions.
-10. Retake incorrect questions
-    Users can retake only the questions they previously answered incorrectly.
-Project Structure
+```text
+React / Vite Frontend (Render)
+          │
+          │ HTTPS /api/generate
+          ▼
+Express Backend (Render)
+          │
+          │ Gemini API
+          ▼
+Google Gemini
+```
+
+**The Gemini API key is stored only on the backend.**
+
+## ⚙️ HOW IT WORKS
+
+1. **User Input** — User enters a study topic or notes.
+2. **React → Backend** — React sends `POST /api/generate`.
+3. **Backend → Gemini** — Express creates a structured prompt and calls Gemini.
+4. **JSON Parsing** — The backend extracts and parses the AI response.
+5. **Backend Validation** — The generated JSON is validated against the expected schema.
+6. **Frontend Validation** — The frontend validates the response again.
+7. **Interactive Rendering** — React renders flashcards and quiz questions.
+8. **Quiz Evaluation** — The application calculates the score.
+9. **Retake Incorrect Questions** — Users can retry only the questions they answered incorrectly.
+
+## 📁 PROJECT STRUCTURE
+
+```text
 flam-study-assistant/
-│
 ├── src/
 │   ├── components/
 │   │   ├── PromptInput.jsx
@@ -135,18 +102,14 @@ flam-study-assistant/
 │   │   ├── LoadingState.jsx
 │   │   ├── ErrorState.jsx
 │   │   └── EmptyState.jsx
-│   │
 │   ├── lib/
 │   │   ├── api.js
 │   │   └── validateResult.js
-│   │
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── index.css
-│
 ├── server/
 │   └── server.js
-│
 ├── .env.example
 ├── .gitignore
 ├── package.json
@@ -154,220 +117,272 @@ flam-study-assistant/
 ├── README.md
 ├── vite.config.js
 └── index.html
+```
 
-Important Files
-- App.jsx — Top-level application state and request handling
-- PromptInput.jsx — Topic input, examples, validation, and character counter
-- FlashcardDeck.jsx — Flashcard navigation and restart
-- Flashcard.jsx — Individual flashcard interaction
-- Quiz.jsx — Quiz flow, scoring, results, and retake functionality
-- api.js — Backend API communication and request cancellation
-- validateResult.js — Frontend validation of AI-generated JSON
-- server.js — Express API, Gemini integration, parsing, validation, and error handling
-- vite.config.js — Vite configuration and local /api proxy
-Prerequisites
-- Node.js >= 18
-- npm
-- Google Gemini API key
-A Gemini API key can be obtained from:
-https://aistudio.google.com/app/apikey
-Installation
-Clone the repository:
+## 🔑 PREREQUISITES
+
+- **Node.js >= 18**
+- **npm**
+- **Google Gemini API key**
+
+Get a Gemini API key from: https://aistudio.google.com/app/apikey
+
+## 📥 INSTALLATION
+
+### **1. Clone the Repository**
+
+```bash
 git clone https://github.com/Poshanna/FLAM_ASSIGNMENT.git
+```
 
-Navigate into the project:
+### **2. Navigate to the Project**
+
+```bash
 cd FLAM_ASSIGNMENT
+```
 
-Install dependencies:
+### **3. Install Dependencies**
+
+```bash
 npm install
+```
 
-Environment Variables
-Local Development
-Create a .env file in the project root:
+## 🔐 ENVIRONMENT VARIABLES
+
+### **Local Development**
+
+Create `.env` in the project root:
+
+```env
 GEMINI_API_KEY=your_actual_gemini_api_key_here
 PORT=3001
+```
 
-Variables
-- GEMINI_API_KEY — Required Gemini API key
-- PORT — Optional backend port. Defaults to 3001
-⚠️ Never commit .env to GitHub. The .env file is included in .gitignore.
-The .env.example file is provided as a safe template without real secrets.
+- **GEMINI_API_KEY** — Required Gemini API key
+- **PORT** — Optional backend port; defaults to `3001`
 
-Production
-In production, the GEMINI_API_KEY is configured as a secure environment variable in the Render backend service.
-The API key is never included in the frontend code.
-Running Locally
-One Command
-Start both the frontend and backend:
+> ⚠️ **Never commit `.env` to GitHub.** The `.env.example` file is a safe template.
+
+### **Production**
+
+The Gemini API key is configured securely as an environment variable in the Render backend and is **never exposed to the frontend**.
+
+## ▶️ RUNNING LOCALLY
+
+### **Start Frontend + Backend**
+
+```bash
 npm run dev
+```
 
-Frontend:
-http://localhost:5173
+**Frontend:** `http://localhost:5173`  
+**Backend:** `http://localhost:3001`  
+**Health Check:** `http://localhost:3001/api/health`
 
-Backend:
-http://localhost:3001
+## 🏭 PRODUCTION BUILD
 
-Health check:
-http://localhost:3001/api/health
-
-The Vite development server proxies /api/* requests to the Express backend.
-Run Individually
-Backend only:
-npm run dev:server
-
-Frontend only:
-npm run dev:client
-
-Production Build
-Build the frontend:
+```bash
 npm run build
+```
 
-Preview the production build locally:
+Preview the production build:
+
+```bash
 npm run preview
+```
 
-The production frontend is generated inside:
-dist/
+## ☁️ DEPLOYMENT
 
-Deployment
-The application is deployed using Render.
-Frontend
-The React/Vite frontend is deployed as a Render Static Site.
-Frontend URL:
-https://flam-study-assistant-71v5.onrender.com
-Build command:
+The application is deployed using **Render**.
+
+### **FRONTEND**
+
+**Live URL:** https://flam-study-assistant-71v5.onrender.com
+
+**Build Command:**
+
+```bash
 npm install && npm run build
+```
 
-Publish directory:
-dist
+**Publish Directory:** `dist`
 
-Production environment variable:
+**Production Environment Variable:**
+
+```text
 VITE_API_URL=https://flam-assignment-0h7b.onrender.com
+```
 
-Backend
-The Express backend is deployed as a Render Web Service.
-Backend URL:
-https://flam-assignment-0h7b.onrender.com
-Build command:
-npm install
+### **BACKEND**
 
-Start command:
-node server/server.js
+**Live URL:** https://flam-assignment-0h7b.onrender.com
 
-The Gemini API key is configured as a backend environment variable.
-Backend Health Check
-https://flam-assignment-0h7b.onrender.com/api/health
-The health endpoint verifies that the backend service is running and that the Gemini API key is configured.
-Render Free Tier: The backend may spin down after a period of inactivity. The first request after inactivity can therefore take longer while the service starts again.
+**Build Command:** `npm install`  
+**Start Command:** `node server/server.js`
 
-Example Usage
-Try any of the following:
-Example 1
+**Health Check:** https://flam-assignment-0h7b.onrender.com/api/health
+
+> **Render Free Tier:** The backend may spin down after inactivity, so the first request after inactivity may take longer.
+
+## 🧪 EXAMPLE USAGE
+
+### **Example 1 — Binary Search**
+
+```text
 Explain binary search
+```
 
-Generates flashcards covering the algorithm, process, and time/space complexity, followed by a multiple-choice quiz.
-Example 2
+### **Example 2 — Operating Systems**
+
+```text
 Teach me OS process scheduling
+```
 
-Covers concepts such as FCFS, SJF, Round Robin, and Priority Scheduling.
-Example 3
+### **Example 3 — NLP**
+
+```text
 Explain transformers in NLP
+```
 
-Covers concepts such as attention, self-attention, multi-head attention, and encoder/decoder architecture.
-Example 4
-Paste your own class notes.
-The application supports up to 5000 characters of input.
-Error Handling
-Scenario	Handling	User Experience
-Empty input	Frontend + Backend validation	Friendly validation message
-Input over 5000 characters	Frontend + Backend validation	Character limit error
-Backend unreachable	Frontend API handling	Connection error with retry
-Malformed AI JSON	Backend JSON extraction/parsing	Friendly AI response error
-Wrong JSON structure	Backend + Frontend validation	Specific validation error
-Empty AI response	Backend validation	Friendly retry message
-Gemini API failure	Backend error handling	Temporary service error
-Slow request	Loading state	Spinner/skeleton and disabled button
-Multiple rapid requests	AbortController + request ID	Stale response is ignored
+### **Example 4 — Personal Notes**
 
+Paste your own class notes. **Maximum input length: 5000 characters.**
+
+## 🛡️ ERROR HANDLING
+
+| **Scenario** | **Handling** | **User Experience** |
+|---|---|---|
+| Empty input | Frontend + Backend validation | Friendly validation message |
+| Input > 5000 characters | Frontend + Backend validation | Character limit error |
+| Backend unreachable | API error handling | Connection error + retry |
+| Malformed AI JSON | JSON parsing | Friendly error |
+| Wrong JSON structure | Backend + Frontend validation | Specific validation error |
+| Empty AI response | Backend validation | Retry message |
+| Gemini API failure | Backend error handling | Temporary service error |
+| Slow request | Loading state | Spinner + disabled button |
+| Multiple rapid requests | AbortController + request ID | Stale response ignored |
 
 The application never directly trusts AI-generated content. Responses are parsed and validated before being rendered.
-AI Output Validation
-The backend validates the generated study set before sending it to the frontend.
+
+## 🤖 AI OUTPUT VALIDATION
+
+The backend validates every generated study set before sending it to the frontend.
+
 Validation includes:
-- Study-set title
-- Difficulty value
-- Flashcard structure
-- Flashcard question and answer
-- Quiz question structure
-- Multiple-choice options
-- Correct answer must exist in the provided options
-- Required fields must be present
-The frontend performs an additional validation pass before rendering the result.
-This provides defense in depth against malformed or unexpected AI output.
-Stale Response Protection
-The frontend uses request cancellation and request IDs to prevent an older request from overwriting the result of a newer request.
-For example:
-Request A ────────────────►
+
+- **Study-set title**
+- **Difficulty**
+- **Flashcard structure**
+- **Flashcard question and answer**
+- **Quiz question structure**
+- **Multiple-choice options**
+- **Correct answer exists in the options**
+- **Required fields**
+
+The frontend performs an additional validation pass for **defense in depth**.
+
+## 🚫 STALE RESPONSE PROTECTION
+
+The frontend uses **AbortController** and **request IDs** to prevent older requests from overwriting newer results.
+
+```text
+Request A ──────────────────►
 Request B ────────►
 
 If B finishes first:
-B becomes the displayed result.
+    B becomes the displayed result.
 
 If A finishes later:
-A is ignored.
+    A is ignored.
+```
 
-This prevents race conditions when users submit multiple study topics quickly.
-AI Usage Note
+## ♿ ACCESSIBILITY & RESPONSIVE DESIGN
+
+The application supports mobile and desktop screen sizes and includes:
+
+- **Semantic HTML**
+- **Keyboard-accessible controls**
+- **Visible focus states**
+- **Responsive layouts**
+- **Mobile-friendly controls**
+- **Responsive flashcard interface**
+- **Responsive quiz interface**
+
+## 🧪 TESTING
+
+The application was tested for:
+
+- ✅ Study topic generation
+- ✅ Flashcard rendering
+- ✅ Flashcard reveal
+- ✅ Flashcard navigation
+- ✅ Quiz interaction
+- ✅ Score calculation
+- ✅ Incorrect-answer tracking
+- ✅ Retake incorrect questions
+- ✅ Quiz restart
+- ✅ Empty input
+- ✅ Invalid input
+- ✅ AI/API failures
+- ✅ Loading states
+- ✅ Backend health
+- ✅ Production frontend/backend communication
+- ✅ Production build
+
+Production build:
+
+```bash
+npm run build
+```
+
+## 🤖 AI USAGE NOTE
+
 AI coding assistants were used during development for:
+
 - Brainstorming
 - Debugging
 - Code suggestions
 - Documentation assistance
-The final implementation was reviewed, tested, and adapted by the author.
-Known Limitations
-- AI-generated content may occasionally contain factual inaccuracies. Important facts should be verified using reliable sources.
-- The quiz currently uses multiple-choice questions rather than true/false or free-response questions.
-- Study sets are stored only in React state and are not persisted in a database.
+
+The final implementation was **reviewed, tested, and adapted by the author**.
+
+## ⚠️ KNOWN LIMITATIONS
+
+- AI-generated content may occasionally contain factual inaccuracies.
+- Important facts should be verified using reliable sources.
+- The quiz currently uses multiple-choice questions.
+- True/false and free-response questions are not currently supported.
+- Study sets are stored only in React state.
+- There is no database persistence.
 - Refreshing the page starts a new session.
 - The free Gemini API tier has rate limits and quotas.
 - AI-generated content is primarily optimized for English.
 - There are no user accounts or cloud-saved study sets.
 - The application is designed as a focused single-session study tool.
-Accessibility and Responsive Design
-The application was designed to work across different screen sizes, including mobile and desktop.
-It includes:
-- Semantic HTML
-- Keyboard-accessible controls
-- Visible focus states
-- Responsive layouts
-- Mobile-friendly buttons and cards
-- Responsive flashcard and quiz interfaces
-Testing
-The application was tested for:
-- Study topic generation
-- Flashcard rendering
-- Flashcard reveal
-- Flashcard navigation
-- Quiz interaction
-- Score calculation
-- Incorrect-answer tracking
-- Retake incorrect questions
-- Quiz restart
-- Empty input
-- Invalid input
-- AI/API failures
-- Loading states
-- Backend health
-- Production frontend/backend communication
-- Production build
-A production build was successfully generated using:
-npm run build
 
-Repository
-GitHub:
+## 📦 REPOSITORY
+
+**GitHub Repository:**
+
 https://github.com/Poshanna/FLAM_ASSIGNMENT
 
-Author
-Poshanna Durki
-AI & ML Undergraduate Student
-GitHub:
-https://github.com/Poshanna
+## ⏱️ TIME SPENT
+
+Replace the values below with your **actual approximate time**:
+
+- **Planning & Architecture:** `___ hours`
+- **Backend (Express + Gemini):** `___ hours`
+- **Validation Layer:** `___ hours`
+- **Frontend Components:** `___ hours`
+- **CSS + Responsive Design:** `___ hours`
+- **README + Documentation:** `___ hours`
+- **Testing + Bug Fixes:** `___ hours`
+
+### **TOTAL: `___ HOURS`**
+
+## 👨‍💻 AUTHOR
+
+**Poshanna Durki**  
+**AI & ML Undergraduate Student**
+
+**GitHub:** https://github.com/Poshanna
