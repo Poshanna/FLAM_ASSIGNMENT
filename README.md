@@ -365,17 +365,7 @@ npm run build
 Repository
 GitHub:
 https://github.com/Poshanna/FLAM_ASSIGNMENT
-Time Spent
-Replace the values below with your approximate actual time before final submission.
 
-- Planning & architecture: ___ hours
-- Backend (Express + Gemini): ___ hours
-- Validation layer: ___ hours
-- Frontend components: ___ hours
-- CSS + responsive design: ___ hours
-- README + documentation: ___ hours
-- Testing + bug fixes: ___ hours
-Total: ___ hours
 Author
 Poshanna Durki
 AI & ML Undergraduate Student
